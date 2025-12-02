@@ -2,10 +2,14 @@ import argparse
 
 def is_valid(num: int) -> bool:
     as_str = str(num)
-    if len(as_str) % 2 == 1:
-        return True
-    half = len(as_str) // 2
-    return as_str[:half] != as_str[half:]
+    for pattern_len in range(1, (len(as_str)//2)+1):
+        if len(as_str) % pattern_len != 0:
+            continue
+        pattern = as_str[:pattern_len]
+        if as_str == "".join([pattern]*(len(as_str)//pattern_len)):
+            return False
+    return True
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -19,7 +23,6 @@ def main() -> None:
             right = int(bounds[1])
             for i in range(left, right+1):
                 if not is_valid(i):
-                    #print(i)
                     sum += i
     print(sum)
 
