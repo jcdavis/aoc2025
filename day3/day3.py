@@ -1,17 +1,21 @@
 import argparse
 
 def joltage(bank: str) -> int:
-    max_first = int(bank[0])
-    max_second = 0
-    for c in bank[1:len(bank)-1]:
-        val = int(c)
-        if val > max_first:
-            max_first = val
-            max_second = 0
-        elif val > max_second:
-            max_second = val
-    max_second = max(max_second, int(bank[-1]))
-    return max_first*10 + max_second
+    ints = [int(c) for c in bank]
+    cache = {}
+    def recurse(i: int, digits: int) -> int:
+        if digits == 0:
+            return 0
+        if i == len(ints):
+            return float("-inf")
+        if (i, digits) in cache:
+            return cache[(i, digits)]
+        take = ints[i] * (10**(digits-1)) + recurse(i+1, digits-1)
+        skip = recurse(i+1, digits)
+        cache[(i, digits)] = max(take, skip)
+        return max(take, skip)
+    result = recurse(0, 12)
+    return result
 
 
 def main() -> None:
