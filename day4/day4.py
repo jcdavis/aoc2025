@@ -1,6 +1,6 @@
 import argparse
 
-def can_access(grid: list[str], i: int, j: int) -> bool:
+def can_access(grid: list[list[str]], i: int, j: int) -> bool:
     adj = 0
 
     for di in range(-1, 2):
@@ -19,12 +19,21 @@ def main() -> None:
     args = parser.parse_args()
     sum = 0
     with open(args.file) as file:
-        grid = file.readlines()
+        grid = []
+        for line in file.readlines():
+            grid.append([c for c in line])
 
-        for i in range(len(grid)):
-            for j in range(len(grid[i])):
-                if grid[i][j] == '@' and can_access(grid, i, j):
-                    sum += 1
+        while True:
+            can_remove = []
+            for i in range(len(grid)):
+                for j in range(len(grid[i])):
+                    if grid[i][j] == '@' and can_access(grid, i, j):
+                        can_remove.append((i,j))
+            if len(can_remove) == 0:
+                break
+            sum += len(can_remove)
+            for (i,j) in can_remove:
+                grid[i][j] = '.'
 
     print(sum)
 
