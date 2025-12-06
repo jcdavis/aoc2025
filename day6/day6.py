@@ -1,28 +1,45 @@
 import argparse
 from collections import defaultdict
+from typing import Optional
+
+def parse_number(data: list[str], col: int) -> Optional[int]:
+    i = 0
+    sum = 0
+    while i < len(data)-1 and data[i][col] == ' ':
+        i += 1
+    if i == len(data)-1:
+        return None
+    while i < len(data)-1 and data[i][col] != ' ':
+        sum *= 10
+        sum += int(data[i][col])
+        i += 1
+    return sum
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('file')
     args = parser.parse_args()
     sum = 0
-    cols = defaultdict(list)
     with open(args.file) as file:
-        for line in file.readlines():
-            parts = line.split()
-            for i in range(0, len(parts)):
-                cols[i].append(parts[i])
+        data = file.readlines()
 
-        for col in cols:
-            op = cols[col].pop()
-            acc = 1 if op == '*' else 0
-            for elem in cols[col]:
-                if op == '*':
-                    acc *= int(elem)
+        j = 0
+        op = '+'
+        acc = 0
+        while j < len(data[0])-1:
+            if data[-1][j] != ' ':
+                sum += acc
+                op = data[-1][j]
+                acc = 0 if op == '+' else 1
+            num = parse_number(data, j)
+            if num is not None:
+                if op == '+':
+                    acc += num
                 else:
-                    acc += int(elem)
-            sum += acc
+                    acc *= num
+            j += 1
 
+        sum += acc
 
 
     print(sum)
