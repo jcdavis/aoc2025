@@ -1,5 +1,4 @@
 import argparse
-from collections import defaultdict
 from typing import Optional
 
 def parse_number(data: list[str], col: int) -> Optional[int]:
@@ -22,7 +21,6 @@ def main() -> None:
     sum = 0
     with open(args.file) as file:
         data = file.readlines()
-
         j = 0
         op = '+'
         acc = 0
@@ -40,7 +38,6 @@ def main() -> None:
             j += 1
 
         sum += acc
-
 
     print(sum)
 
