@@ -29,9 +29,8 @@ def main() -> None:
             parents[a] = b
             sizes[b] += sizes[a]
             del sizes[a]
-        return False
+        return True
 
-    connections = 1000
     with open(args.file) as file:
         points = []
         for line in file.readlines():
@@ -47,18 +46,14 @@ def main() -> None:
                         abs(points[i][1]-points[j][1])**2 +
                         abs(points[i][2]-points[j][2])**2
                     )
-                    #print(f'Pushing {points[i]}, {points[j]}: {dist}')
                     heapq.heappush(heap, (dist, i, j))
 
-        for _ in range(connections):
+        while True:
             (dist, i, j) = heapq.heappop(heap)
-            #print(f'Attempting to union {points[i]}, {points[j]} - {dist}')
             union(i, j)
-
-        #print(f'{parents}')
-        sizeNums = [s for (_, s) in sizes.items()]
-        sizeNums.sort(reverse=True)
-        print(sizeNums[0]*sizeNums[1]*sizeNums[2])
+            if len(sizes) == 1:
+                print(points[i][0]*points[j][0])
+                break
 
 
 
